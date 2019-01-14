@@ -23,7 +23,7 @@ import java.util.UUID;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemDataListener{
 
     private Realm realm;
     EditText taskNameEdittext;
@@ -47,20 +47,20 @@ public class MainActivity extends AppCompatActivity {
 
         RealmResults<Task> tasks = realm.where(Task.class).findAll();
 
-        final TaskAdapter adapter = new TaskAdapter(tasks,this);
+        final TaskAdapter adapter = new TaskAdapter(tasks,this,this);
 
 
         task_list.setAdapter(adapter);
 
 
-        receiver= new BroadcastReceiver() {
+        /*receiver= new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     deleteAll.setVisibility(View.VISIBLE);
                 }
             }
-        };
+        };*/
 
 
 
@@ -144,27 +144,44 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //realm.where(Task.class).equalTo("done",true).findAll().deleteAllFromRealm();
                 deleteAllDone();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do something after 5s = 5000ms
+                        deleteAll.setVisibility(View.GONE);
+                    }
+                }, 1000);
             }
         });
 
     }
 
     private void deleteAllDone() {
-        RealmResults<Task> tasks = realm.where(Task.class).findAll();
+        try {
+            RealmResults<Task> tasks = realm.where(Task.class).findAll();
 
-        realm.beginTransaction();
+            realm.beginTransaction();
 
-        tasks.deleteAllFromRealm();
+            tasks.deleteAllFromRealm();
 
-        realm.commitTransaction();
+            realm.commitTransaction();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public void changeTaskDone(final String taskId) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Task task = realm.where(Task.class).equalTo("id", taskId).findFirst();
-                task.setDone(!task.isDone());
+                try {
+                    Task task = realm.where(Task.class).equalTo("id",taskId).findFirst();
+                    task.setDone(!task.isDone());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -174,18 +191,19 @@ public class MainActivity extends AppCompatActivity {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.where(Task.class).equalTo("id",taskId)
-                        .findFirst()
-                        .deleteFromRealm();
+                try {
+                    realm.where(Task.class).equalTo("id",taskId).findFirst().deleteFromRealm();
 
-                RealmResults<Task> tasks = realm.where(Task.class).findAll();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
 
             }
         });
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver),new IntentFilter("data_notNull"));
@@ -201,11 +219,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver,new IntentFilter("data_notNull"));
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Override
+    public void sendData(String item) {
+        if (item.equals("enableButton")) {
+            deleteAll.setVisibility(View.VISIBLE);
+        }else if (item.equals("disableButton")){
+            deleteAll.setVisibility(View.GONE);
+        }
     }
 }

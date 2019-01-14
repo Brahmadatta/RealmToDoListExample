@@ -22,9 +22,12 @@ public class TaskAdapter extends RealmBaseAdapter<Task> implements ListAdapter {
 
     private MainActivity mainActivity;
 
-    public TaskAdapter(@Nullable OrderedRealmCollection<Task> data, MainActivity mainActivity) {
+    private ItemDataListener itemListener;
+
+    public TaskAdapter(@Nullable OrderedRealmCollection<Task> data, MainActivity mainActivity, ItemDataListener itemListener) {
         super(data);
         this.mainActivity = mainActivity;
+        this.itemListener = itemListener;
     }
 
     private static class ViewHolder{
@@ -58,6 +61,10 @@ public class TaskAdapter extends RealmBaseAdapter<Task> implements ListAdapter {
         }
 
         if (adapterData != null){
+
+
+            itemListener.sendData("enableButton");
+
             Task task = adapterData.get(position);
             viewHolder.taskName.setText(task.getName());
             viewHolder.isTaskDone.setChecked(task.isDone());
@@ -78,8 +85,10 @@ public class TaskAdapter extends RealmBaseAdapter<Task> implements ListAdapter {
                 viewHolder.taskName.setPaintFlags(Paint.DITHER_FLAG);
             }
 
-            Intent intent = new Intent("data_notNull");
-            LocalBroadcastManager.getInstance(convertView.getContext()).sendBroadcast(intent);
+            /*Intent intent = new Intent("data_notNull");
+            LocalBroadcastManager.getInstance(convertView.getContext()).sendBroadcast(intent);*/
+        }else {
+            itemListener.sendData("disableButton");
         }
 
         return convertView;
@@ -106,5 +115,9 @@ public class TaskAdapter extends RealmBaseAdapter<Task> implements ListAdapter {
             }
         }
     };
+
+    public interface ItemDataListener {
+        void sendData(String item);
+    }
 
 }
