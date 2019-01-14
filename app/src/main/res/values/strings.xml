@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RealmToDoListExample</string>
+    <string name="add_task">Add Task</string>
+    <string name="enter_task">Enter task</string>
+    <string name="to_do_list">To Do List</string>
+    <string name="delete_all">Delete All</string>
+</resources>
