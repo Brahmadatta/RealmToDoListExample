@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.realm.RealmResults;
 
@@ -25,14 +26,25 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     RealmResults<MovieDataList> realmResults;
     boolean autoUpdate;
 
+    private List<Movie> movies;
+    private int rowLayout;
+
+
+
     public static final String IMAGE_URL_BASE_PATH = "http://image.tmdb.org/t/p/w342//";
 
-    /*public MovieListAdapter(Context context, RealmResults<MovieDataList> realmResults, boolean autoUpdate) {
+    public MovieListAdapter(Context context, RealmResults<MovieDataList> realmResults, boolean autoUpdate) {
         this.context = context;
         this.realmResults = realmResults;
         this.autoUpdate = autoUpdate;
-    }*/
+    }
 
+
+    /*public MovieListAdapter(Context context, List<Movie> movies, int rowLayout) {
+        this.context = context;
+        this.movies = movies;
+        this.rowLayout = rowLayout;
+    }*/
 
     public MovieListAdapter(ArrayList<HashMap<String, String>> movieDataLists, Context context) {
         this.moviesArrayList = movieDataLists;
@@ -46,6 +58,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         return new MovieListViewHolder(view);
     }
 
+    //for retrofit
+    /*@NonNull
+    @Override
+    public MovieListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout,viewGroup,false);
+        return new MovieListViewHolder(view);
+    }*/
+
     @Override
     public void onBindViewHolder(@NonNull MovieListViewHolder movieListViewHolder, int i) {
 
@@ -56,6 +76,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         movieListViewHolder.title.setText(hashMap.get("title"));
         movieListViewHolder.id.setText(hashMap.get("id"));
         Picasso.get().load(IMAGE_URL_BASE_PATH + hashMap.get("poster_path")).into(movieListViewHolder.posterPath);
+
+
+        /*String image_url = IMAGE_URL_BASE_PATH + movies.get(i).getPoster_path();
+
+        Picasso.get().load(image_url).placeholder(android.R.drawable.sym_def_app_icon)
+                .error(android.R.drawable.sym_def_app_icon)
+                .into(movieListViewHolder.posterPath);
+
+        movieListViewHolder.title.setText(movies.get(i).getTitle());
+        movieListViewHolder.overview.setText(movies.get(i).getOverview());
+        movieListViewHolder.id.setText(movies.get(i).getId());*/
 
 
         /*final MovieDataList movieDataList = realmResults.get(i);
@@ -72,6 +103,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @Override
     public int getItemCount() {
         return moviesArrayList.size();
+        //return movies.size();
     }
 
     public class MovieListViewHolder extends RecyclerView.ViewHolder{

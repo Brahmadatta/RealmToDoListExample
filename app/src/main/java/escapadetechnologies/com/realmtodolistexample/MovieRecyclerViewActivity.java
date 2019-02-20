@@ -1,5 +1,7 @@
 package escapadetechnologies.com.realmtodolistexample;
 
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,10 @@ import java.util.Map;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieRecyclerViewActivity extends AppCompatActivity {
 
@@ -32,11 +38,23 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
     RecyclerView moviesRecyclerView;
 
     private static final String BASE_URL = "http://api.themoviedb.org/3/movie/top_rated?api_key=b7ae4931443ae44ae879c87b191bb8e5";
+
+    public static final String BASE_UR = "http://api.themoviedb.org/3/";
+
     ArrayList<HashMap<String,String>> movieslist;
     private Realm realm;
     MovieDataList list;
 
     private MovieListAdapter movieListAdapter;
+
+    public static Retrofit retrofit = null;
+    private RecyclerView recyclerView = null;
+
+    private Movies movies;
+
+
+    public static final String API_KEY = "b7ae4931443ae44ae879c87b191bb8e5";
+    RepositoryMovies repositoryMovies;
 
 
 
@@ -53,6 +71,73 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
 
 
         getTheData();
+
+
+
+        recyclerView = findViewById(R.id.moviesRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //connectAndGetApiData();
+    }
+
+    private void connectAndGetApiData() {
+
+        if (retrofit == null){
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_UR)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+
+        MovieApiService movieApiService = retrofit.create(MovieApiService.class);
+
+        Call<MovieResponse> call = movieApiService.getTopRatedMovies(API_KEY);
+
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, retrofit2.Response<MovieResponse> response) {
+                List<Movie> movies = response.body().getResults();
+
+                //recyclerView.setAdapter(new MovieListAdapter(getApplicationContext(), movies, R.layout.movies_cardview));
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //saveDatatoRealmDatabase();
+                    }
+                }, 1000);
+
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void saveDatatoRealmDatabase() {
+
+        movies = retrofit.create(Movies.class);
+
+        try {
+
+            Call<List<Movie>> call = movies.movies();
+            retrofit2.Response<List<Movie>> tasks = call.execute();
+
+            for (Movie m : tasks.body()){
+                repositoryMovies.addMovie(m);
+            }
+
+
+            List<Movie> list = repositoryMovies.readAllMovies();
+            Log.e("listrealm",list.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void getTheData() {
