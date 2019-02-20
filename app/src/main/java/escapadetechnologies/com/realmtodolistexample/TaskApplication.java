@@ -18,6 +18,12 @@ public class TaskApplication extends Application {
                 .schemaVersion(0)
                 .build();
 
+        RealmConfiguration otherConfig = new RealmConfiguration.Builder()
+                .name("otherrealm.realm")
+                .schemaVersion(2)
+                .build();
+
         Realm.setDefaultConfiguration(realmConfiguration);
+        Realm.setDefaultConfiguration(otherConfig);
     }
 }

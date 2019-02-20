@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemD
 
     private Realm realm;
     EditText taskNameEdittext;
-    Button addTask,deleteAll;
+    Button addTask,deleteAll,nextTab;
     ListView task_list;
     BroadcastReceiver receiver;
 
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemD
         addTask = findViewById(R.id.addTask);
         task_list = findViewById(R.id.task_list);
         deleteAll = findViewById(R.id.deleteAll);
+        nextTab = findViewById(R.id.nextTab);
 
         realm = Realm.getDefaultInstance();
 
@@ -61,6 +62,14 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemD
                 }
             }
         };*/
+
+        nextTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(MainActivity.this,MovieRecyclerViewActivity.class));
+            }
+        });
 
 
 

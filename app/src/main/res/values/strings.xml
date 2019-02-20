@@ -4,4 +4,6 @@
     <string name="enter_task">Enter task</string>
     <string name="to_do_list">To Do List</string>
     <string name="delete_all">Delete All</string>
+    <string name="next_activity">Next Activity</string>
+    <string name="id">id</string>
 </resources>
