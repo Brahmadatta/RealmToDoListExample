@@ -1,4 +1,4 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,4 +1,4 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

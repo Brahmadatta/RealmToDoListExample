@@ -1,4 +1,4 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

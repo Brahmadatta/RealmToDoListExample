@@ -1,4 +1,4 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import com.google.gson.annotations.SerializedName;
 

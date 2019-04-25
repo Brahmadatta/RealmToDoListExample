@@ -1,16 +1,18 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import android.os.Handler;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -74,9 +76,9 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
 
 
 
-        recyclerView = findViewById(R.id.moviesRecyclerView);
+       /* recyclerView = findViewById(R.id.moviesRecyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));*/
         //connectAndGetApiData();
     }
 
@@ -149,10 +151,6 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
                 Log.e("response", response);
 
 
-                RealmResults<MovieDataList> movieDataLists = realm.where(MovieDataList.class).findAll();
-
-
-
 
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -193,7 +191,10 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
 
                         //getRealmData(hashMap);
 
-                        saveDataToRealm(hashMap);
+
+
+                        saveDataToRealm(movieslist);
+
 
                     }
 
@@ -212,7 +213,11 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("error",error.getMessage());
+                if (error.getClass().equals(TimeoutError.class)){
+                    Toast.makeText(MovieRecyclerViewActivity.this, "Timeout.Please try again", Toast.LENGTH_SHORT).show();
+                }else if (error.getClass().equals(NoConnectionError.class)){
+                    Toast.makeText(MovieRecyclerViewActivity.this, "Timeout.Please try again", Toast.LENGTH_SHORT).show();
+                }
             }
 
         }){
@@ -230,14 +235,44 @@ public class MovieRecyclerViewActivity extends AppCompatActivity {
 
     }
 
-    private void saveDataToRealm(HashMap<String,String> hashMap) {
+    private void saveDataToRealm(ArrayList<HashMap<String, String>> movieslist) {
 
         MovieDataList list = new MovieDataList();
-        list.setTitle(hashMap.get("id"));
-        list.setTitle(hashMap.get("title"));
-        list.setPopularity(hashMap.get("popularity"));
-        list.setOverView(hashMap.get("overview"));
-        list.setBackdrop_path(hashMap.get("poster_path"));
+
+
+
+        for (int i = 0 ; i < movieslist.size() ; i++){
+
+            list.setTitle(movieslist.get(i).get("title"));
+            list.setPopularity(movieslist.get(i).get("popularity"));
+            list.setOverView(movieslist.get(i).get("overview"));
+            list.setBackdrop_path(movieslist.get(i).get("poster_path"));
+            list.setId(movieslist.get(i).get("id"));
+
+        }
+
+        try {
+            realm.where(Movie.class).equalTo("id",list.getId()).findFirst().deleteFromRealm();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        /*for (int i = 0 ; i < hashMap.size() ; i ++) {
+            list.setTitle(hashMap.get("id"));
+            list.setTitle(hashMap.get("title"));
+            list.setPopularity(hashMap.get("popularity"));
+            list.setOverView(hashMap.get("overview"));
+            list.setBackdrop_path(hashMap.get("poster_path"));
+
+            realm.beginTransaction();
+            realm.copyToRealm(list);
+            realm.commitTransaction();
+        }*/
+
+        //MovieDataList list = new MovieDataList();
+
+
 
         realm.beginTransaction();
         realm.copyToRealm(list);

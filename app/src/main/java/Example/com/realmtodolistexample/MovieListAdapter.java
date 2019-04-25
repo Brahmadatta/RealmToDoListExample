@@ -1,4 +1,4 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import android.content.Context;
 import android.content.Intent;
@@ -104,6 +104,16 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     public int getItemCount() {
         return moviesArrayList.size();
         //return movies.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public class MovieListViewHolder extends RecyclerView.ViewHolder{

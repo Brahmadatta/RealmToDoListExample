@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="escapadetechnologies.com.realmtodolistexample">
+    package="Example.com.realmtodolistexample">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".TaskApplication"
+        android:name="Example.com.realmtodolistexample.TaskApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,15 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity android:name="Example.com.realmtodolistexample.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieRecyclerViewActivity" />
-        <activity android:name=".OfflineDataActivity"></activity>
+        <activity android:name="Example.com.realmtodolistexample.MovieRecyclerViewActivity" />
+        <activity android:name="Example.com.realmtodolistexample.OfflineDataActivity"></activity>
     </application>
 
 </manifest>

@@ -1,11 +1,8 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
-
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -61,6 +58,8 @@ public class OfflineDataActivity extends AppCompatActivity {
 
 
         RealmResults<MovieDataList> dataLists = realm.where(MovieDataList.class).findAll();
+
+        RealmResults<MovieDataList> dataListRealmResults = realm.where(MovieDataList.class).beginGroup().contains("title","Lord").endGroup().findAll();
         Toast.makeText(this, ""+dataLists, Toast.LENGTH_SHORT).show();
 
     }

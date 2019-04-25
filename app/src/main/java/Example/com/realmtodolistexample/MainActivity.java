@@ -1,11 +1,9 @@
-package escapadetechnologies.com.realmtodolistexample;
+package Example.com.realmtodolistexample;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -26,8 +23,8 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemDataListener{
 
     private Realm realm;
-    EditText taskNameEdittext;
-    Button addTask,deleteAll,nextTab;
+    EditText taskNameEdittext,ediittext;
+    Button addTask,deleteAll,nextTab,call;
     ListView task_list;
     BroadcastReceiver receiver;
 
@@ -42,6 +39,22 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemD
         task_list = findViewById(R.id.task_list);
         deleteAll = findViewById(R.id.deleteAll);
         nextTab = findViewById(R.id.nextTab);
+        call = findViewById(R.id.call);
+        ediittext = findViewById(R.id.ediittext);
+
+
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String s = Uri.encode("*001203#");
+                Intent callIntent =  new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:"+s));
+                startActivity(callIntent);
+            }
+        });
+
+
+
 
         realm = Realm.getDefaultInstance();
 
